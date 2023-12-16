@@ -7,9 +7,12 @@ const ClickerApp = () => {
   const [milliseconds, setMilliseconds] = useState(0);
   const [targetTime, setTargetTime] = useState(0);
   const [timerActive, setTimerActive] = useState(true);
+  const [timeExpired, setTimeExpired] = useState(false);
 
   const handleClick = () => {
-    setCount(count + 1);
+    if (timerActive && !timeExpired) {
+      setCount(count + 1);
+    }
   };
 
   const handleReset = () => {
@@ -17,10 +20,12 @@ const ClickerApp = () => {
     setCount(0);
     setSeconds(0);
     setMilliseconds(0);
+    setTimeExpired(false);
   };
 
   const handleStart = () => {
     setTimerActive(true);
+    setTimeExpired(false);
   };
 
   const handleSetTargetTime = (event) => {
@@ -40,6 +45,7 @@ const ClickerApp = () => {
             setSeconds((prevSeconds) => {
               if (prevSeconds === targetTime) {
                 setTimerActive(false);
+                setTimeExpired(true);
                 return 0;
               } else {
                 return prevSeconds + 1;
@@ -59,26 +65,24 @@ const ClickerApp = () => {
   return (
     <div className='content-block'>
       <h1>Clicker App</h1>
-<label>
+      <label>
         Set Target Time (seconds):
         <input type="number" value={targetTime} onChange={handleSetTargetTime} />
       </label>
       <p>Click count: {count}</p>
-      <p>Time: {seconds} seconds {milliseconds} milliseconds</p>
+      {timeExpired ? <p>Время истекло</p> : <p>Time: {seconds} seconds {milliseconds} milliseconds</p>}
       
       <div className='button1'>
-      <button className="button-85" role="button" onClick={handleStart}>Start</button>
-      <button className="button-89" role="button" onClick={handleClick}>Click me</button>
-      <button className="button-86" role="button" onClick={handleReset}>Reset</button>
-      
+        <button className="button-85" role="button" onClick={handleStart}>Start</button>
+        <button className="button-89" role="button" onClick={handleClick} disabled={timeExpired}>Click me</button>
+        <button className="button-86" role="button" onClick={handleReset}>Reset</button>
       </div>
-
-      
     </div>
   );
 };
 
 export default ClickerApp;
+
 
 
 
